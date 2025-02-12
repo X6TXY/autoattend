@@ -5,6 +5,10 @@ services:
     build: .
     environment:
       - SHOW_UI=false
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
     volumes:
       - .:/app
+      - .env:/app/.env
     restart: unless-stopped
+
