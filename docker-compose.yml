@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  attendance-bot:
+    build: .
+    environment:
+      - SHOW_UI=false
+    volumes:
+      - .:/app
+    restart: unless-stopped
