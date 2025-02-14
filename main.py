@@ -4,6 +4,7 @@ from datetime import datetime
 
 from selenium import webdriver
 from selenium.common import TimeoutException
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -121,14 +122,19 @@ if __name__ == "__main__":
         print("Running in headless mode")
         options.add_argument('--headless')
     
-    user_data_dir = create_unique_user_data_dir()
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
-    options.add_argument(f'--user-data-dir={user_data_dir}')
-    options.add_argument('--remote-debugging-port=9222')
-
-    driver = webdriver.Chrome(options=options)
+    
+    # Add these options to help with stability
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-infobars')
+    options.add_argument('--disable-notifications')
+    
+    # Create a new ChromeDriver service
+    service = Service()
+    
+    driver = webdriver.Chrome(service=service, options=options)
     try:
         print("Starting bot...")
         main(driver)
