@@ -2,6 +2,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from main import attend_bot
+
 app = FastAPI()
 
 
@@ -17,6 +19,15 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "Attendance Bot API"}
+
+
+@app.get("/attend")
+async def attend(username: str, password: str):
+    try:
+        attend_bot(username, password)
+        return {"message": "Attendance Bot API"}
+    except Exception as e:
+        return {"message": str(e)}
 
 
 if __name__ == "__main__":
