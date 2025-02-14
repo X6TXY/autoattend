@@ -121,26 +121,36 @@ if __name__ == "__main__":
     if not SHOW_UI:
         print("Running in headless mode")
         options.add_argument('--headless=new')
-    
+    temp_dir = create_unique_user_data_dir()
+    print(f"Using temporary directory: {temp_dir}")
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--disable-extensions')
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-notifications')
-    options.add_argument('--remote-debugging-port=9222')
+    options.add_argument(f'--user-data-dir={temp_dir}')
     options.add_argument('--window-size=1920,1080')
     options.add_argument('--start-maximized')
-    
-    service = Service(executable_path='/usr/bin/chromedriver')
-    
     try:
+        print("Creating Chrome service...")
+        service = Service()
+        print("Initializing Chrome driver...")
         driver = webdriver.Chrome(service=service, options=options)
         print("Starting bot...")
         main(driver)
     except Exception as e:
         print(f"Fatal error occurred: {e}")
+        import traceback
+        traceback.print_exc()
     finally:
         print("Shutting down Chrome driver...")
         if 'driver' in locals():
             driver.quit()
+        # Clean up temporary directory
+        import shutil
+        try:
+            shutil.rmtree(temp_dir)
+            print(f"Cleaned up temporary directory: {temp_dir}")
+        except Exception as e:
+            print(f"Error cleaning up temporary directory: {e}")
