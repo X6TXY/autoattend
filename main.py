@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -12,6 +13,14 @@ PASSWORD = os.getenv("PASSWORD")
 UPDATE_INTERVAL = 60  # time in seconds on how often to update the page
 WAIT_TIME = 10  # time in seconds to wait for target element to appear, if it doesn't appear, the function will return
 SHOW_UI = True  # if True, the browser instance will be open. If False, it will be headless, which requires less cpu
+
+
+def create_unique_user_data_dir():
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    user_data_dir = f'/tmp/chrome-data_{timestamp}'
+    if not os.path.exists(user_data_dir):
+        os.makedirs(user_data_dir)
+    return user_data_dir
 
 
 def try_to_attend(selenium_driver):
@@ -111,10 +120,12 @@ if __name__ == "__main__":
     if not SHOW_UI:
         print("Running in headless mode")
         options.add_argument('--headless')
+    
+    user_data_dir = create_unique_user_data_dir()
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
-    options.add_argument('--user-data-dir=/tmp/chrome-data')
+    options.add_argument(f'--user-data-dir={user_data_dir}')
     options.add_argument('--remote-debugging-port=9222')
 
     driver = webdriver.Chrome(options=options)
