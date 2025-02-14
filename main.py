@@ -1,5 +1,8 @@
 import os
+import shutil
+import tempfile
 import time
+import uuid
 
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -112,6 +115,14 @@ if __name__ == "__main__":
     print("Initializing Chrome driver...")
     options = webdriver.ChromeOptions()
 
+    # Create a unique temporary directory
+    temp_dir = f"/tmp/chrome_temp_{uuid.uuid4()}"
+    os.makedirs(temp_dir, exist_ok=True)
+    
+    options.add_argument(f"--remote-debugging-port=0")
+    options.add_argument(f"--user-data-dir={temp_dir}")
+    options.add_argument("--profile-directory=Default")
+
     if not SHOW_UI:
         print("Running in headless mode")
         options.add_argument('--headless=new')
@@ -127,7 +138,7 @@ if __name__ == "__main__":
     options.add_argument('--disable-features=VizDisplayCompositor')
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--disable-web-security')
-    options.add_argument('--incognito')  # Add incognito mode to avoid profile issues
+    options.add_argument('--incognito')
 
     try:
         print("Creating Chrome service...")
@@ -144,3 +155,7 @@ if __name__ == "__main__":
         print("Shutting down Chrome driver...")
         if 'driver' in locals():
             driver.quit()
+        try:
+            shutil.rmtree(temp_dir)
+        except Exception as e:
+            print(f"Failed to remove temporary directory: {e}")
