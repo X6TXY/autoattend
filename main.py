@@ -16,24 +16,6 @@ WAIT_TIME = 10  # time in seconds to wait for target element to appear, if it do
 SHOW_UI = True  # if True, the browser instance will be open. If False, it will be headless, which requires less cpu
 
 
-def create_unique_user_data_dir():
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    user_data_dir = f'/tmp/chrome-data_{timestamp}'
-    if not os.path.exists(user_data_dir):
-        os.makedirs(user_data_dir)
-    return user_data_dir
-
-
-def cleanup_user_data_dir(directory):
-    if os.path.exists(directory):
-        try:
-            import shutil
-            shutil.rmtree(directory)
-            print(f"Cleaned up temporary directory: {directory}")
-        except Exception as e:
-            print(f"Error cleaning up directory {directory}: {e}")
-
-
 def try_to_attend(selenium_driver):
     print("Checking for attendance buttons...")
     wait = WebDriverWait(selenium_driver, WAIT_TIME)
@@ -132,11 +114,6 @@ if __name__ == "__main__":
         print("Running in headless mode")
         options.add_argument('--headless=new')
 
-    # Create and use a unique user data directory
-    user_data_dir = create_unique_user_data_dir()
-    print(f"Using temporary directory: {user_data_dir}")
-    options.add_argument(f'--user-data-dir={user_data_dir}')
-
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
@@ -164,4 +141,3 @@ if __name__ == "__main__":
         print("Shutting down Chrome driver...")
         if 'driver' in locals():
             driver.quit()
-        cleanup_user_data_dir(user_data_dir)
