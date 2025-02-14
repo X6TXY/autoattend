@@ -120,26 +120,27 @@ if __name__ == "__main__":
 
     if not SHOW_UI:
         print("Running in headless mode")
-        options.add_argument('--headless')
+        options.add_argument('--headless=new')
     
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
-    
-    # Add these options to help with stability
     options.add_argument('--disable-extensions')
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-notifications')
+    options.add_argument('--remote-debugging-port=9222')
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--start-maximized')
     
-    # Create a new ChromeDriver service
-    service = Service()
+    service = Service(executable_path='/usr/bin/chromedriver')
     
-    driver = webdriver.Chrome(service=service, options=options)
     try:
+        driver = webdriver.Chrome(service=service, options=options)
         print("Starting bot...")
         main(driver)
     except Exception as e:
         print(f"Fatal error occurred: {e}")
     finally:
         print("Shutting down Chrome driver...")
-        driver.quit()
+        if 'driver' in locals():
+            driver.quit()
