@@ -24,6 +24,16 @@ def create_unique_user_data_dir():
     return user_data_dir
 
 
+def cleanup_user_data_dir(directory):
+    if os.path.exists(directory):
+        try:
+            import shutil
+            shutil.rmtree(directory)
+            print(f"Cleaned up temporary directory: {directory}")
+        except Exception as e:
+            print(f"Error cleaning up directory {directory}: {e}")
+
+
 def try_to_attend(selenium_driver):
     print("Checking for attendance buttons...")
     wait = WebDriverWait(selenium_driver, WAIT_TIME)
@@ -51,7 +61,7 @@ def try_to_attend(selenium_driver):
         return
     except Exception as e:
         print(f"Error while trying to attend: {e}")
-        try_to_attend(driver)
+        try_to_attend(selenium_driver)
 
 
 def main(selenium_driver):
@@ -121,17 +131,24 @@ if __name__ == "__main__":
     if not SHOW_UI:
         print("Running in headless mode")
         options.add_argument('--headless=new')
-    temp_dir = create_unique_user_data_dir()
-    print(f"Using temporary directory: {temp_dir}")
+
+    # Create and use a unique user data directory
+    user_data_dir = create_unique_user_data_dir()
+    print(f"Using temporary directory: {user_data_dir}")
+    options.add_argument(f'--user-data-dir={user_data_dir}')
+
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--disable-extensions')
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-notifications')
-    options.add_argument(f'--user-data-dir={temp_dir}')
     options.add_argument('--window-size=1920,1080')
     options.add_argument('--start-maximized')
+    options.add_argument('--disable-features=VizDisplayCompositor')
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--disable-web-security')
+
     try:
         print("Creating Chrome service...")
         service = Service()
@@ -147,10 +164,4 @@ if __name__ == "__main__":
         print("Shutting down Chrome driver...")
         if 'driver' in locals():
             driver.quit()
-        # Clean up temporary directory
-        import shutil
-        try:
-            shutil.rmtree(temp_dir)
-            print(f"Cleaned up temporary directory: {temp_dir}")
-        except Exception as e:
-            print(f"Error cleaning up temporary directory: {e}")
+        cleanup_user_data_dir(user_data_dir)
