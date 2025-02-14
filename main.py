@@ -109,13 +109,13 @@ def login(selenium_driver):
 
 
 if __name__ == "__main__":
+    import tempfile
+
+    # Create a temporary directory that will be used as the unique user data directory.
+    temp_dir = tempfile.TemporaryDirectory(prefix="chrome-user-data-")
     print("Initializing Chrome driver...")
     options = webdriver.ChromeOptions()
-
-    # Add a unique temporary user data directory to avoid conflicts with an already in use profile
-    import tempfile
-    user_data_dir = tempfile.mkdtemp(prefix="chrome-user-data-")
-    options.add_argument(f"--user-data-dir={user_data_dir}")
+    options.add_argument(f"--user-data-dir={temp_dir.name}")
 
     if not SHOW_UI:
         print("Running in headless mode")
@@ -148,3 +148,4 @@ if __name__ == "__main__":
         print("Shutting down Chrome driver...")
         if 'driver' in locals():
             driver.quit()
+        temp_dir.cleanup()
