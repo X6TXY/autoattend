@@ -1,6 +1,5 @@
 import os
 import time
-from datetime import datetime
 
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -8,6 +7,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+# Removed unused datetime import to fix linter warning
+
 
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
@@ -109,6 +111,11 @@ def login(selenium_driver):
 if __name__ == "__main__":
     print("Initializing Chrome driver...")
     options = webdriver.ChromeOptions()
+
+    # Add a unique temporary user data directory to avoid conflicts with an already in use profile
+    import tempfile
+    user_data_dir = tempfile.mkdtemp(prefix="chrome-user-data-")
+    options.add_argument(f"--user-data-dir={user_data_dir}")
 
     if not SHOW_UI:
         print("Running in headless mode")
