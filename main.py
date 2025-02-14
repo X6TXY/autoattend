@@ -109,13 +109,8 @@ def login(selenium_driver):
 
 
 if __name__ == "__main__":
-    import tempfile
-
-    # Create a temporary directory that will be used as the unique user data directory.
-    temp_dir = tempfile.TemporaryDirectory(prefix="chrome-user-data-")
     print("Initializing Chrome driver...")
     options = webdriver.ChromeOptions()
-    options.add_argument(f"--user-data-dir={temp_dir.name}")
 
     if not SHOW_UI:
         print("Running in headless mode")
@@ -132,6 +127,7 @@ if __name__ == "__main__":
     options.add_argument('--disable-features=VizDisplayCompositor')
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--disable-web-security')
+    options.add_argument('--incognito')  # Add incognito mode to avoid profile issues
 
     try:
         print("Creating Chrome service...")
@@ -148,4 +144,3 @@ if __name__ == "__main__":
         print("Shutting down Chrome driver...")
         if 'driver' in locals():
             driver.quit()
-        temp_dir.cleanup()
