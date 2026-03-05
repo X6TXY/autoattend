@@ -1,35 +1,16 @@
-fly.toml
-.git/
-__pycache__/
-.envrc
-.venv/
-
-# Python
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-env/
-ENV/
-
-# Chrome sessions
-chrome_sessions/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.idea
+.vscode
 .DS_Store
-Thumbs.db
-
-# Documentation
-README.md
-*.md
-
-# Logs
+.env
+.env.*
 *.log

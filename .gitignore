@@ -1,1 +1,76 @@
-.env
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+
+# pipenv
+Pipfile.lock
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm/VSCode settings
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# macOS/Windows/Linux OS stuff
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore log files and other output
+*.log
+
+# If using pytest
+.pytest_cache/
+
+# Ignore project-specific files
+*.env
+.env.*
+.envrc
+
+# Ignore any database, temp, or compiled files
+*.sqlite3
+*.db
+*.tmp
+*.bak
+
+# chromedriver
+chromedriver
