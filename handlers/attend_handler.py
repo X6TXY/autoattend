@@ -88,11 +88,9 @@ def attend_loop(portal: str):
                     print("-" * 40)
                     print("Не удалось найти ни одной карточки или сообщения о дисциплинах.")
                     print("Возможная причина: забыл указать логин/пароль в конфигах.")
-                    return
+                    raise RuntimeError("Страница не содержит карточки и сообщение о доступных дисциплинах") from e
 
             time.sleep(10)
             driver.get(ATTEND_URL)
-    except Exception as e:
-        print("Ошибка:", e)
     finally:
         driver.quit()
